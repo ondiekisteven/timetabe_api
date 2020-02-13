@@ -21,6 +21,7 @@ from table.views import *
 urlpatterns = [
     path('', include('api.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
     path('api/students', StudentList.as_view()),
     path('api/students/get', StudentDetail.as_view()),
     path('api/faculties', FacultiesList.as_view()),

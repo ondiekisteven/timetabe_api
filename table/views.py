@@ -22,6 +22,13 @@ class StudentList(APIView):
         serialized = StudentsSerializer(all_students, many=True)
         return Response(data=serialized.data)
 
+    def post(self, request):
+        serializer = StudentsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class StudentDetail(APIView):
     """
@@ -41,6 +48,22 @@ class StudentDetail(APIView):
             return Response(serialized.data)
         except KeyError:
             return Response({'error': 'No registration number defined'}, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        student = get_object_or_404(Students, regnumber=request.GET['regnumber'])
+        serializer = StudentsSerializer(instance=student, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'details': 'Edited successfully'}, status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        student = get_object_or_404(Students, regnumber=request.GET['regnumber'])
+        operation = student.delete()
+        if operation:
+            return Response({'details': 'Deleted successfully'}, status=status.HTTP_200_OK)
+        return Response({'details': 'Delete operation failed'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FacultiesList(APIView):

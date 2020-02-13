@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'table.apps.TableConfig',
     'rest_framework',
     'api.apps.ApiConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
